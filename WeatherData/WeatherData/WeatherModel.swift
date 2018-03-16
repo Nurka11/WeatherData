@@ -2,56 +2,75 @@
 //  WeatherModel.swift
 //  WeatherData
 //
-//  Created by NURZHAN on 15.03.2018.
+//  Created by NURZHAN on 16.03.2018.
 //  Copyright © 2018 NURZHAN. All rights reserved.
 //
 
 import Foundation
-import Alamofire
 
 class WeatherModel {
+    private var temp = String()
+    private var humidity = String()
+    private var windSpeed = String()
+    private var sunriseTime = String()
+    private var sunsetTime = String()
+    private var cityName = String()
+    private var currentDate = NSDate()
     
-    public var mainData: [String : String] = [:]
-    public var readyData: Bool = false
-    public var temp = String()
-    public var humidity = String()
-    public var windSpeed = String()
-    public var sunriseTime = String()
-    public var sunsetTime = String()
-    public var cityName = String()
-    public var currentData = NSDate()
-    
-    init(_ cityName: String, completion : @escaping ()->()) {
-        let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=\(cityName)&appid=a644894d0dc1f4eb3f946b445c31dd30")!
+    init(_ temp: String, _ humidity: String, _ windSpeed: String, _ sunriseTime: String, _ sunsetTime: String, _ cityName: String, _ currentDate: NSDate) {
         
+        self.temp = temp
+        self.humidity = humidity
+        self.windSpeed = windSpeed
+        self.sunriseTime = sunriseTime
+        self.sunsetTime = sunsetTime
+        self.currentDate = currentDate
         self.cityName = cityName
-        
-        Alamofire.request(url).responseJSON { (responce) in
-            if let result = responce.result.value {
-                print(result)
-                
-                let resultDictionary  = result as! NSDictionary
-                
-                if(resultDictionary["main"] == nil){
-                    completion()
-                }
-                else {
-                    self.temp = "\(String(describing: (resultDictionary["main"] as! NSDictionary)["temp"]!))"
-                    self.mainData["Temperatura"] = self.temp
-                    self.mainData["temp"] = self.temp
-                    self.humidity = "\(String(describing: (resultDictionary["main"] as! NSDictionary)["humidity"]!))"
-                    self.windSpeed = "\(String(describing: (resultDictionary["wind"] as! NSDictionary)["speed"]!))"
-                    self.sunriseTime = "\(String(describing: (resultDictionary["sys"] as! NSDictionary)["sunrise"]!))"
-                    self.sunsetTime = "\(String(describing: (resultDictionary["sys"] as! NSDictionary)["sunset"]!))"
-                    
-                    self.currentData = NSDate()
-                    
-                    self.readyData = true
-                    completion()
-                }
-            }
-        }
         
     }
     
+    public var Temperature: String {
+        get{
+            return temp
+        }
+    }
+    
+    public var Humidity: String {
+        get{
+            return humidity
+        }
+    }
+    
+    public var WindSpeed: String {
+        get{
+            return windSpeed
+        }
+    }
+    
+    public var SunriseTime: String {
+        get{
+            return sunriseTime
+        }
+    }
+    
+    public var SunsetTime: String {
+        get{
+            return sunsetTime
+        }
+    }
+    
+    public var CityName: String {
+        get{
+            return cityName
+        }
+    }
+    
+    public var CurrentDate: NSDate {
+        get{
+            return currentDate
+        }
+        set{
+            currentDate = newValue
+        }
+    }
 }

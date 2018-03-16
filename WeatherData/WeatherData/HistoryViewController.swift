@@ -9,7 +9,13 @@
 import UIKit
 import Cartography
 
-class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol DetailWeatherData {
+    var weather: WeatherModel { get }
+}
+
+class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, DetailWeatherData {
+    
+    var weather: WeatherModel = WeatherModel("", "", "", "", "", "", NSDate())
     
     public var delegate: TableDataProtocol?
     
@@ -32,6 +38,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        navigationItem.title = "History"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
         
         view.addSubViews([tableView, dismissButton])
@@ -63,12 +70,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let weather = delegate?.weathers[indexPath.row]
         
-        let todaysDate:NSDate = (weather?.currentData)!
+        let todaysDate:NSDate = (weather?.CurrentDate)!
         let dateFormatter:DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
         let DateInFormat:String = dateFormatter.string(from: todaysDate as Date)
         
-        cell.textLabel?.text = (weather?.cityName)! + " | \(DateInFormat)"
+        cell.textLabel?.text = (weather?.CityName)! + " | \(DateInFormat)"
         return cell
     }
     
@@ -77,6 +84,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             delegate?.weathers.remove(at: indexPath.row)
             tableView.reloadData()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailController = DetailViewController()
+        detailController.weatherData = self
+        navigationController?.pushViewController(detailController, animated: true)
     }
     
     @objc private func dismissController() {

@@ -15,9 +15,9 @@ protocol TableDataProtocol {
     var weathers: [WeatherModel] {get set}
 }
 
-class ViewController: UIViewController, TableDataProtocol {
+class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
-    var getData: WeatherModel?
+    var getData: WeatherGetData?
     
     var weathers: [WeatherModel] = []
     
@@ -50,6 +50,7 @@ class ViewController: UIViewController, TableDataProtocol {
         textField.backgroundColor = .white
         textField.layer.cornerRadius = 7
         textField.layer.sublayerTransform = CATransform3DMakeTranslation(10, 0, 0)
+        textField.delegate = self
         return textField
     }()
     
@@ -62,8 +63,15 @@ class ViewController: UIViewController, TableDataProtocol {
         return button
     }()
     
+    lazy var activityLoader: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.color = .white
+        activity.hidesWhenStopped = true
+        return activity
+    }()
+    
     lazy var historyButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.bookmarks, target: self, action: #selector(openHistoryVC))
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.search, target: self, action: #selector(openHistoryVC))
         return button
     }()
     
@@ -72,6 +80,8 @@ class ViewController: UIViewController, TableDataProtocol {
         textView.backgroundColor = .clear
         textView.textColor = .white
         textView.font = UIFont.systemFont(ofSize: 18)
+        textView.isEditable = false
+        textView.isScrollEnabled = false
         return textView
     }()
     
@@ -79,8 +89,9 @@ class ViewController: UIViewController, TableDataProtocol {
         super.viewDidLoad()
         
         navigationItem.rightBarButtonItem = historyButton
-        
         view.addSubViews([backgroundImage, mainLabel, subLabel, cityName, submitButton, dataView])
+        
+        submitButton.addSubview(activityLoader)
         
         addConstraints()
     }
@@ -104,8 +115,8 @@ class ViewController: UIViewController, TableDataProtocol {
         }
         
         constrain(subLabel, cityName){ v1, v2 in
-            v2.width == (v2.superview?.width)! * 0.8
-            v2.height == 40
+            v2.width == (v2.superview?.width)! * 0.9
+            v2.height == 30
             v2.centerX == v1.centerX
             v2.top == v1.bottom + 30
         }
@@ -116,7 +127,7 @@ class ViewController: UIViewController, TableDataProtocol {
             v2.centerX == v1.centerX
             v2.top == v1.bottom + 15
             
-            v3.width == (v3.superview?.width)! * 0.8
+            v3.width == (v3.superview?.width)! * 0.9
             v3.height == 20
             v3.height == (v3.superview?.height)! * 0.3
             v3.centerX == v2.centerX
@@ -132,25 +143,63 @@ class ViewController: UIViewController, TableDataProtocol {
     }
     
     @objc private func showInfoWeather() {
-        getData = WeatherModel(cityName.text!, completion: {
+        dataView.text = ""
+        submitButton.setTitle("", for: .normal)
+        setupActivityLoader()
+
+        getData = WeatherGetData(cityName.text!, completion: {
             self.setDescriptions()
         })
     }
     
     private func setDescriptions() {
         
-        if (!(getData?.readyData)!) {
-            let alertController = UIAlertController(title: "Error", message: "Fiil the correct name", preferredStyle: .alert)
+        if (!(getData?.ReadyDate)!) {
+            let alertController = UIAlertController(title: "Error", message: "Fill the correct name", preferredStyle: .alert)
             alertController.addAction(UIAlertAction.init(title: "Ok", style: UIAlertActionStyle.cancel, handler: nil))
             present(alertController, animated: true, completion: nil)
         }
         else{
-            dataView.text = "Temperature: \(getData!.temp)\nHumidity: \(getData!.humidity)\nWind speed: \(getData!.windSpeed)\nSunrise Time: \(getData!.sunriseTime)\nSunset Time: \(getData!.sunsetTime)"
+            let weatherData = getData!.WeatherData
+            dataView.text = "Temperature: \(weatherData.Temperature)\nHumidity: \(weatherData.Humidity)\nWind speed: \(weatherData.WindSpeed)\nSunrise Time: \(weatherData.SunriseTime)\nSunset Time: \(weatherData.SunsetTime)"
             
-            weathers.append(getData!)
+            let contains = weathers.contains(where: {
+                return $0.CityName == weatherData.CityName
+            })
+            
+            if(!contains){
+                weathers.append(weatherData)
+            }
+            else {
+                let index = weathers.index(where: {
+                    return $0.CityName == weatherData.CityName
+                })
+                
+                weathers[index!].CurrentDate = weatherData.CurrentDate
+            }
         }
+        
+        activityLoader.stopAnimating()
+        submitButton.setTitle("Submit", for: .normal)
     }
     
+    private func setupActivityLoader() {
+        
+        activityLoader.startAnimating()
+        constrain(submitButton, activityLoader) { v1, v2 in
+            v2.center == v1.center
+        }
+        
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        cityName.resignFirstResponder()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        cityName.resignFirstResponder()
+        return true
+    }
     
 }
 
