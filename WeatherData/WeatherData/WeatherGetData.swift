@@ -20,6 +20,7 @@ class WeatherGetData {
     private var cityName = String()
     private var currentDate = NSDate()
     private var weatherData: WeatherModel?
+    private var weatherDescription = String()
     
     init(_ cityName: String, completion : @escaping ()->()) {
         let url = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=\(cityName)&appid=a644894d0dc1f4eb3f946b445c31dd30")!
@@ -41,10 +42,11 @@ class WeatherGetData {
                     self.windSpeed = "\(String(describing: (resultDictionary["wind"] as! NSDictionary)["speed"]!))"
                     self.sunriseTime = "\(String(describing: (resultDictionary["sys"] as! NSDictionary)["sunrise"]!))"
                     self.sunsetTime = "\(String(describing: (resultDictionary["sys"] as! NSDictionary)["sunset"]!))"
-                    
+                    self.weatherDescription = ((resultDictionary["weather"] as! NSArray)[0] as! NSDictionary)["main"]! as! String
+//                    print(((resultDictionary["weather"] as! NSArray)[0] as! NSDictionary)["description"])
                     self.currentDate = NSDate()
                     
-                    self.weatherData = WeatherModel(self.temp, self.humidity, self.windSpeed, self.sunriseTime, self.sunsetTime, self.cityName, self.currentDate)
+                    self.weatherData = WeatherModel(self.temp, self.humidity, self.windSpeed, self.sunriseTime, self.sunsetTime, self.cityName, self.currentDate, self.weatherDescription)
                     
                     self.readyData = true
                     completion()

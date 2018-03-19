@@ -15,9 +15,10 @@ class WeatherModel {
     private var sunriseTime = String()
     private var sunsetTime = String()
     private var cityName = String()
+    private var weatherDescription = String()
     private var currentDate = NSDate()
     
-    init(_ temp: String, _ humidity: String, _ windSpeed: String, _ sunriseTime: String, _ sunsetTime: String, _ cityName: String, _ currentDate: NSDate) {
+    init(_ temp: String, _ humidity: String, _ windSpeed: String, _ sunriseTime: String, _ sunsetTime: String, _ cityName: String, _ currentDate: NSDate, _ weatherDescription: String) {
         
         self.temp = temp
         self.humidity = humidity
@@ -26,6 +27,7 @@ class WeatherModel {
         self.sunsetTime = sunsetTime
         self.currentDate = currentDate
         self.cityName = cityName
+        self.weatherDescription = weatherDescription
         
     }
     
@@ -73,4 +75,14 @@ class WeatherModel {
             currentDate = newValue
         }
     }
+    
+    public var WeatherDescription: String {
+        get{
+            return weatherDescription
+        }
+        set{
+            weatherDescription = newValue
+        }
+    }
+    
 }

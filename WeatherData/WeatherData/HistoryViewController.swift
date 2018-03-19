@@ -15,7 +15,7 @@ protocol DetailWeatherData {
 
 class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, DetailWeatherData {
     
-    var weather: WeatherModel = WeatherModel("", "", "", "", "", "", NSDate())
+    var weather: WeatherModel = WeatherModel("", "", "", "", "", "", NSDate(), "")
     
     public var delegate: TableDataProtocol?
     

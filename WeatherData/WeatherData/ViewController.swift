@@ -71,7 +71,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     }()
     
     lazy var historyButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.search, target: self, action: #selector(openHistoryVC))
+        let button = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(openHistoryVC))
         return button
     }()
     
