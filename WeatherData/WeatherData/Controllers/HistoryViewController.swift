@@ -13,9 +13,9 @@ protocol DetailWeatherData {
     var weather: WeatherModel { get }
 }
 
-class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, DetailWeatherData {
+class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var weather: WeatherModel = WeatherModel("", "", "", "", "", "", NSDate(), "")
+//    var weather: WeatherModel = WeatherModel("", "", "", "", "", "", NSDate(), "")
     
     public var delegate: TableDataProtocol?
     
@@ -70,12 +70,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let weather = delegate?.weathers[indexPath.row]
         
-        let todaysDate:NSDate = (weather?.CurrentDate)!
-        let dateFormatter:DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        let DateInFormat:String = dateFormatter.string(from: todaysDate as Date)
-        
-        cell.textLabel?.text = (weather?.CityName)! + " | \(DateInFormat)"
+        cell.textLabel?.text = (weather?.CityName)! 
         return cell
     }
     
@@ -88,7 +83,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailController = DetailViewController()
-        detailController.weatherData = self
+//        detailController.weatherData = self
         navigationController?.pushViewController(detailController, animated: true)
     }
     

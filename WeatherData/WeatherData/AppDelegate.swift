@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        let controller = UINavigationController(rootViewController: WeatherViewController())
+        let controller = UINavigationController(rootViewController: WeatherCollectionViewController())
         window?.rootViewController = controller
         
         return true

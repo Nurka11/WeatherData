@@ -9,6 +9,7 @@ target 'WeatherData' do
   pod 'Cartography'
   pod 'Alamofire'
   pod 'SwiftyJSON'  
+  pod 'ObjectMapper'  
 
   target 'WeatherDataTests' do
     inherit! :search_paths

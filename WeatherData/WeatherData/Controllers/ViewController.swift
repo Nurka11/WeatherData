@@ -146,39 +146,29 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
         dataView.text = ""
         submitButton.setTitle("", for: .normal)
         setupActivityLoader()
-
-        getData = WeatherGetData(cityName.text!, completion: {
+        getData = WeatherGetData(cityName.text!, fiveDay: true, completion: {
             self.setDescriptions()
         })
     }
     
     private func setDescriptions() {
+        let weatherData = getData!.WeatherData[0].fiveDayWeather
+        dataView.text = "Temperature: \(weatherData.Temperature)\nWind speed: \(weatherData.WindSpeed)\nSunrise Time: \(weatherData.SunriseTime)\nSunset Time: \(weatherData.SunsetTime)"
         
-        if (!(getData?.ReadyDate)!) {
-            let alertController = UIAlertController(title: "Error", message: "Fill the correct name", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction.init(title: "Ok", style: UIAlertActionStyle.cancel, handler: nil))
-            present(alertController, animated: true, completion: nil)
+        let contains = weathers.contains(where: {
+            return $0.CityName == weatherData.CityName
+        })
+        
+        if(!contains){
+            weathers.append(weatherData)
         }
-        else{
-            let weatherData = getData!.WeatherData
-            dataView.text = "Temperature: \(weatherData.Temperature)\nHumidity: \(weatherData.Humidity)\nWind speed: \(weatherData.WindSpeed)\nSunrise Time: \(weatherData.SunriseTime)\nSunset Time: \(weatherData.SunsetTime)"
-            
-            let contains = weathers.contains(where: {
+        else {
+            let index = weathers.index(where: {
                 return $0.CityName == weatherData.CityName
             })
             
-            if(!contains){
-                weathers.append(weatherData)
-            }
-            else {
-                let index = weathers.index(where: {
-                    return $0.CityName == weatherData.CityName
-                })
-                
-                weathers[index!].CurrentDate = weatherData.CurrentDate
-            }
+            weathers[index!].CurrentDate = weatherData.CurrentDate
         }
-        
         activityLoader.stopAnimating()
         submitButton.setTitle("Submit", for: .normal)
     }

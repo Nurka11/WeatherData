@@ -7,69 +7,66 @@
 //
 
 import Foundation
+import ObjectMapper
 
 class WeatherModel {
-    private var temp = String()
-    private var humidity = String()
-    private var windSpeed = String()
-    private var sunriseTime = String()
-    private var sunsetTime = String()
-    private var cityName = String()
-    private var weatherDescription = String()
-    private var currentDate = NSDate()
     
-    init(_ temp: String, _ humidity: String, _ windSpeed: String, _ sunriseTime: String, _ sunsetTime: String, _ cityName: String, _ currentDate: NSDate, _ weatherDescription: String) {
-        
+    private var temp: String?
+    private var windSpeed: String?
+    private var sunriseTime: String?
+    private var sunsetTime: String?
+    private var cityName: String?
+    private var weatherDescription: String?
+    private var today: String?
+    private var currentDate: String?
+    
+    init(temp: String, windSpeed: String, sunriseTime: String, sunsetTime: String, cityName: String, weatherDescription: String, today: String, currentDate: String) {
         self.temp = temp
-        self.humidity = humidity
         self.windSpeed = windSpeed
         self.sunriseTime = sunriseTime
         self.sunsetTime = sunsetTime
-        self.currentDate = currentDate
         self.cityName = cityName
         self.weatherDescription = weatherDescription
-        
+        self.today = today
+        self.currentDate = currentDate
     }
     
     public var Temperature: String {
         get{
-            return temp
-        }
-    }
-    
-    public var Humidity: String {
-        get{
-            return humidity
+            return temp!
         }
     }
     
     public var WindSpeed: String {
         get{
-            return windSpeed
+            return windSpeed!
         }
     }
     
     public var SunriseTime: String {
         get{
-            return sunriseTime
+            return sunriseTime!
         }
     }
     
     public var SunsetTime: String {
         get{
-            return sunsetTime
+            return sunsetTime!
         }
     }
     
     public var CityName: String {
         get{
-            return cityName
+            return cityName!
+        }
+        set {
+            cityName = newValue
         }
     }
     
-    public var CurrentDate: NSDate {
+    public var CurrentDate: String {
         get{
-            return currentDate
+            return currentDate!
         }
         set{
             currentDate = newValue
@@ -78,7 +75,7 @@ class WeatherModel {
     
     public var WeatherDescription: String {
         get{
-            return weatherDescription
+            return weatherDescription!
         }
         set{
             weatherDescription = newValue

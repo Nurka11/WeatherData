@@ -9,18 +9,19 @@
 import UIKit
 import Cartography
 
-class WeatherViewController: UIViewController {
+class WeatherCollectionViewCell: UICollectionViewCell {
     
     var weather: WeatherGetData?
     
     private var weatherImage: [String : UIImage] = [
         "Rain" : UIImage(named: "rain")!,
         "Smoke" : UIImage(named: "smoke")!,
-        "Clouds" : UIImage(named: "brokenClouds")!
+        "Clouds" : UIImage(named: "brokenClouds")!,
+        "Clear" : UIImage(named: "clear")!
     ]
     
     lazy var backgroundImage: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "rain"))
+        let image = UIImageView(image: #imageLiteral(resourceName: "weatherWall"))
         image.contentMode = .scaleAspectFill
         image.contentMode = .center
         return image
@@ -42,7 +43,6 @@ class WeatherViewController: UIViewController {
     
     lazy var temperatureLabel: UILabel = {
         let label = UILabel()
-        label.text = "7ºc"
         label.textAlignment = .center
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 84)
@@ -51,7 +51,6 @@ class WeatherViewController: UIViewController {
 
     lazy var weatherType: UILabel = {
         let label = UILabel()
-        label.text = "Clouds and sun"
         label.textAlignment = .center
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 20)
@@ -60,7 +59,6 @@ class WeatherViewController: UIViewController {
     
     lazy var humidityLabel: UILabel = {
         let label = UILabel()
-        label.text = "Humidity 65%"
         label.textAlignment = .right
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 18)
@@ -69,36 +67,18 @@ class WeatherViewController: UIViewController {
     
     lazy var windSpeedLabel: UILabel = {
         let label = UILabel()
-        label.text = "Wind speed 1m/s"
         label.textAlignment = .right
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 18)
         return label
     }()
     
-    lazy var searchButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.search, target: self, action: #selector(searchOtherCities))
-        return button
-    }()
-    
-    lazy var citiesButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.organize, target: self, action: nil)
-        return button
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        view.addSubViews([backgroundImage, cityName, temperatureLabel, weatherType, humidityLabel, windSpeedLabel])
+        addSubViews([backgroundImage, cityName, temperatureLabel, weatherType, humidityLabel, windSpeedLabel])
         
         addConstraints()
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.view.backgroundColor = UIColor.clear
-        
-        navigationItem.rightBarButtonItems = [searchButton, citiesButton]
         
         getInformationWeather()
         
@@ -108,6 +88,10 @@ class WeatherViewController: UIViewController {
         
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func getInformationWeather() {
          weather = WeatherGetData("Almaty") {
             self.setInformation()
@@ -115,33 +99,34 @@ class WeatherViewController: UIViewController {
     }
     
     private func setInformation() {
-        let modelWeather = weather!.WeatherData
+        let modelWeather = weather!.TodaysWeatherData
         backgroundImage.image = weatherImage[modelWeather.WeatherDescription]
         cityName.text = modelWeather.CityName
-        temperatureLabel.text = "\(Int(Double(modelWeather.Temperature)!-273.15))ºc"
-        humidityLabel.text = "Humidity \(String(describing: modelWeather.Humidity))%"
+        temperatureLabel.text = modelWeather.Temperature
         windSpeedLabel.text = "Wind speed \(String(describing: modelWeather.WindSpeed))m/s"
         weatherType.text = modelWeather.WeatherDescription
     }
     
     private func addConstraints() {
         
-        constrain(view, backgroundImage){ v1, v2 in
+        let statusBarHeight = UIApplication.shared.statusBarFrame.height
+        
+        constrain(self, backgroundImage){ v1, v2 in
             v2.width == v1.width
             v2.height == v1.height
             v2.center == v1.center
         }
         
-        constrain(view, cityName) { v1, v2 in
+        constrain(self, cityName) { v1, v2 in
             v2.width == v1.width
             v2.height == 50
             v2.centerX == v1.centerX
-            v2.top == v1.top + view.bounds.height / 10
+            v2.top == v1.top + self.bounds.height / 10 + statusBarHeight + 50
         }
         
         constrain(cityName, temperatureLabel, weatherType) { v1, v2, v3 in
             v2.width == (v2.superview?.width)!
-            v2.height == view.bounds.height / 6
+            v2.height == self.bounds.height / 6
             v2.centerX == v1.centerX
             v2.top == v1.bottom + 20
             
@@ -155,7 +140,7 @@ class WeatherViewController: UIViewController {
             v2.width == v1.width
             v2.height == 30
             v2.right == (v2.superview?.right)! - 20
-            v2.top == v1.top + view.bounds.height / 8
+            v2.top == v1.top + self.bounds.height / 8
             
             v3.width == v2.width
             v3.height == v2.height
@@ -163,10 +148,6 @@ class WeatherViewController: UIViewController {
             v3.right == v2.right
         }
         
-    }
-    
-    @objc private func searchOtherCities() {
-        navigationController?.pushViewController(ViewController(), animated: true)
     }
     
 }
