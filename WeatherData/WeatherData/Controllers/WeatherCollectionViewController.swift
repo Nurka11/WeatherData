@@ -8,10 +8,17 @@
 
 import UIKit
 import Cartography
+import SwiftVideoBackground
 
-class WeatherCollectionViewController: UIViewController {
+protocol DefaultCities {
+    var citiesArray: [String] {get set}
+}
+
+class WeatherCollectionViewController: UIViewController, DefaultCities {
     
 //    MARK: Properties
+    
+    var citiesArray: [String] = ["Almaty", "Taiwan"]
     
     lazy var searchButton: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.search, target: self, action: #selector(searchOtherCities))
@@ -28,16 +35,10 @@ class WeatherCollectionViewController: UIViewController {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: Constants.mainCellReuseIdentifier)
-        collectionView.isPagingEnabled = true
         collectionView.isScrollEnabled = true
+        collectionView.isPagingEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = self
-        return collectionView
-    }()
-    
-    lazy var subCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
 
@@ -77,10 +78,10 @@ class WeatherCollectionViewController: UIViewController {
         
         constrain(view, collectionView) { v1, v2 in
             v2.width == v1.width
-            v2.height == v1.height * 0.8
-            v2.top == v1.top
-            v2.centerX == v1.centerX
+            v2.height == v1.height
+            v2.center == v1.center
         }
+        
         
     }
     
@@ -108,13 +109,28 @@ extension WeatherCollectionViewController: UICollectionViewDelegateFlowLayout {
 extension WeatherCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return citiesArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.mainCellReuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.mainCellReuseIdentifier, for: indexPath) as! WeatherCollectionViewCell
+        
+//        cell.defaultCityName = citiesArray[indexPath.row]
+        cell.getInformationWeather(defaultCityName: citiesArray[indexPath.row])
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
 }

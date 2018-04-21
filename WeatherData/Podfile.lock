@@ -2,20 +2,23 @@ PODS:
   - Alamofire (4.7.0)
   - Cartography (3.0.1)
   - ObjectMapper (3.1.0)
+  - SwiftVideoBackground (3.0.0)
   - SwiftyJSON (4.0.0)
 
 DEPENDENCIES:
   - Alamofire
   - Cartography
   - ObjectMapper
+  - SwiftVideoBackground
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 907e0a98eb68cdb7f9d1f541a563d6ac5dc77b25
   Cartography: f8c899bb0f5cf20758644a8eea59a75e98a03a5d
   ObjectMapper: 20505058f54e5c3ca69e1d6de9897d152a5369a6
+  SwiftVideoBackground: 15c69b74458ad57f123c52f55a5bf6865eaf4eae
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: 54c43156974f65c9f14c21e58c5373df4ea6b8a3
+PODFILE CHECKSUM: a9435359d2259da6a95793feae2999b0d155f528
 
 COCOAPODS: 1.4.0

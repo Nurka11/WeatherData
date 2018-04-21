@@ -22,7 +22,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     var weathers: [WeatherModel] = []
     
     lazy var backgroundImage: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "wall"))
+        let image = UIImageView(image: #imageLiteral(resourceName: "sunny"))
         return image
     }()
 
@@ -137,9 +137,9 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     }
     
     @objc private func openHistoryVC() {
-        let controller = HistoryViewController()
-        controller.delegate = self
-        navigationController?.pushViewController(controller, animated: true)
+//        let controller = HistoryViewController()
+//        controller.delegate = self
+//        navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc private func showInfoWeather() {
