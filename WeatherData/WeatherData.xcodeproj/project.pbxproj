@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18033B4E20A9AE8700D437E8 /* ReservedCityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18033B4D20A9AE8700D437E8 /* ReservedCityController.swift */; };
 		18060F9C205F756E0092F889 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18060F9B205F756E0092F889 /* WeatherCollectionViewCell.swift */; };
 		18060F9E205F77850092F889 /* GifLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18060F9D205F77850092F889 /* GifLoad.swift */; };
 		182913BD206D27F100F4022C /* WeatherDaysModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182913BC206D27F100F4022C /* WeatherDaysModel.swift */; };
@@ -59,6 +60,7 @@
 
 /* Begin PBXFileReference section */
 		013EAA0798A2FA24D34B6213 /* Pods-WeatherDataTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherDataTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeatherDataTests/Pods-WeatherDataTests.debug.xcconfig"; sourceTree = "<group>"; };
+		18033B4D20A9AE8700D437E8 /* ReservedCityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservedCityController.swift; sourceTree = "<group>"; };
 		18060F9B205F756E0092F889 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 		18060F9D205F77850092F889 /* GifLoad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifLoad.swift; sourceTree = "<group>"; };
 		182913BC206D27F100F4022C /* WeatherDaysModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDaysModel.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				18E27552205AEF3C000D9888 /* DetailViewController.swift */,
 				18F4D696205AB0D5008333E4 /* HistoryViewController.swift */,
 				186A88E020767265006FDBCE /* WeatherCollectionViewController.swift */,
+				18033B4D20A9AE8700D437E8 /* ReservedCityController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -597,6 +600,7 @@
 				18060F9C205F756E0092F889 /* WeatherCollectionViewCell.swift in Sources */,
 				18F4D666205AA85B008333E4 /* ViewController.swift in Sources */,
 				182913BD206D27F100F4022C /* WeatherDaysModel.swift in Sources */,
+				18033B4E20A9AE8700D437E8 /* ReservedCityController.swift in Sources */,
 				18F4D664205AA85B008333E4 /* AppDelegate.swift in Sources */,
 				18F4D697205AB0D5008333E4 /* HistoryViewController.swift in Sources */,
 				18F4D699205AB636008333E4 /* WeatherGetData.swift in Sources */,

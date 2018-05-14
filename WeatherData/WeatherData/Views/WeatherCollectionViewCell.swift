@@ -34,20 +34,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         "Intermittent clouds" : "https://assets.calm.com/1578b34e624639ab51634d550e6ed8eb.mp4",
         "Cloudy" : "https://assets.calm.com/766ccc5e1024264ebd67445eda2fe712.mp4",
         "Mostly cloudy" : "https://assets.calm.com/602f74eb513448d66ecec302b23aabdc.mp4",
-        "Sunny2" : "https://assets.calm.com/db43ece896d33c2cca61eb92e7f7ad03.mp4",
-        "Smoke" : "https://assets.calm.com/e8ebb91d6d60b9ba887c5a7b850444c9.mp4",
-        "Sunny" : "https://assets.calm.com/f601bec6ad901e552a2ef4c05722dd59.mp4",
-        "Mostly cloudy w/ showers" : "https://assets.calm.com/f601bec6ad901e552a2ef4c05722dd59.mp4"
-    ]
-    
-    private var weatherOwnVideo: [String : String] = [
-        "Clear" : "clear",
-        "Rain" : "https://assets.calm.com/1e3734bbdb4927e21072c59e856e3ccb.mp4",
-        "Rain2" : "https://assets.calm.com/fea14a3cf74fe19bdaf09150bde4a66e.mp4",
-        "Intermittent clouds" : "https://assets.calm.com/1578b34e624639ab51634d550e6ed8eb.mp4",
-        "Cloudy" : "https://assets.calm.com/766ccc5e1024264ebd67445eda2fe712.mp4",
-        "Mostly clear" : "mostlyClear",
-        "Sunny2" : "https://assets.calm.com/db43ece896d33c2cca61eb92e7f7ad03.mp4",
+        "Mostly sunny" : "https://assets.calm.com/db43ece896d33c2cca61eb92e7f7ad03.mp4",
         "Smoke" : "https://assets.calm.com/e8ebb91d6d60b9ba887c5a7b850444c9.mp4",
         "Sunny" : "https://assets.calm.com/f601bec6ad901e552a2ef4c05722dd59.mp4",
         "Mostly cloudy w/ showers" : "https://assets.calm.com/f601bec6ad901e552a2ef4c05722dd59.mp4"
@@ -148,11 +135,11 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     private func setInformation() {
         let modelWeather = weather!.TodaysWeatherData
 
-//        let url = URL(string: weatherVideo[modelWeather.WeatherDescription]!)!
-//
-//        player.play(view: self, url: url)
-        try? player.play(view: self, videoName: weatherOwnVideo[modelWeather.WeatherDescription]!, videoType: "mp4")
-        print(modelWeather.WeatherDescription)
+        let url = URL(string: weatherVideo[modelWeather.WeatherDescription]!)!
+
+        player.play(view: self, url: url)
+//        try? player.play(view: self, videoName: weatherOwnVideo[modelWeather.WeatherDescription]!, videoType: "mp4")
+//        print(modelWeather.WeatherDescription)
         
         cityName.text = modelWeather.CityName
         let str = NSString(format: "%.1f", Double(modelWeather.Temperature)!)

@@ -17,18 +17,21 @@ protocol TableDataProtocol {
 
 class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
+//    MARK: Properties
     var getData: WeatherGetData?
     
     var weathers: [WeatherModel] = []
     
+    public var defaultCities: DefaultCities?
+    
     lazy var backgroundImage: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "sunny"))
+        let image = UIImageView(image: #imageLiteral(resourceName: "wallpaper"))
         return image
     }()
 
     lazy var mainLabel: UILabel = {
         let label = UILabel()
-        label.text = "What's the weather?"
+        label.text = SearchControllerConstants.mainLabelText
         label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 24)
@@ -37,7 +40,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
     lazy var subLabel: UILabel = {
         let label = UILabel()
-        label.text = "Enter your city"
+        label.text = SearchControllerConstants.subLabelText
         label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 18)
@@ -46,7 +49,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
     lazy var cityName: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter city Name"
+        textField.placeholder = SearchControllerConstants.cityNameText
         textField.backgroundColor = .white
         textField.layer.cornerRadius = 7
         textField.layer.sublayerTransform = CATransform3DMakeTranslation(10, 0, 0)
@@ -56,7 +59,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
     lazy var submitButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Submit", for: .normal)
+        button.setTitle(SearchControllerConstants.submitButton, for: .normal)
         button.backgroundColor = UIColor(red: 108/255, green: 193/255, blue: 117/255, alpha: 1)
         button.layer.cornerRadius = 7
         button.addTarget(self, action: #selector(showInfoWeather), for: .touchUpInside)
@@ -70,8 +73,8 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
         return activity
     }()
     
-    lazy var historyButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Save", style: UIBarButtonItemStyle.plain, target: self, action: #selector(openHistoryVC))
+    lazy var saveCity: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: SearchControllerConstants.saveButton, style: UIBarButtonItemStyle.plain, target: self, action: #selector(saveCityName))
         return button
     }()
     
@@ -85,10 +88,11 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
         return textView
     }()
     
+//    MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.rightBarButtonItem = historyButton
+        navigationItem.rightBarButtonItem = saveCity
         view.addSubViews([backgroundImage, mainLabel, subLabel, cityName, submitButton, dataView])
         
         submitButton.addSubview(activityLoader)
@@ -96,6 +100,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
         addConstraints()
     }
     
+//    MARK: Constraints
     private func addConstraints() {
         
         constrain(view, backgroundImage){ v1, v2 in
@@ -136,10 +141,16 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
     }
     
-    @objc private func openHistoryVC() {
-//        let controller = HistoryViewController()
-//        controller.delegate = self
-//        navigationController?.pushViewController(controller, animated: true)
+    @objc private func saveCityName() {
+        let savingCity = City(entity: CoreDataConstants.entity!, insertInto: CoreDataConstants.context)
+        savingCity.setValue(cityName.text!, forKey: CoreDataConstants.keyToSaving)
+        
+        do {
+            try CoreDataConstants.context.save()
+            defaultCities?.citiesArray.append(savingCity)
+        } catch let error {
+            print(error)
+        }
     }
     
     @objc private func showInfoWeather() {
@@ -153,7 +164,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
     
     private func setDescriptions() {
         let weatherData = getData!.WeatherData[0].fiveDayWeather
-        dataView.text = "Temperature: \(weatherData.Temperature)\nWind speed: \(weatherData.WindSpeed)\nSunrise Time: \(weatherData.SunriseTime)\nSunset Time: \(weatherData.SunsetTime)"
+        dataView.text = "\(SearchControllerConstants.temperature): \(weatherData.Temperature)\n\(SearchControllerConstants.windSpeed): \(weatherData.WindSpeed)\n\(SearchControllerConstants.sunriseTime): \(weatherData.SunriseTime)\n\(SearchControllerConstants.sunsetTime): \(weatherData.SunsetTime)"
         
         let contains = weathers.contains(where: {
             return $0.CityName == weatherData.CityName
@@ -170,7 +181,7 @@ class ViewController: UIViewController, TableDataProtocol, UITextFieldDelegate {
             weathers[index!].CurrentDate = weatherData.CurrentDate
         }
         activityLoader.stopAnimating()
-        submitButton.setTitle("Submit", for: .normal)
+        submitButton.setTitle(SearchControllerConstants.submitButton, for: .normal)
     }
     
     private func setupActivityLoader() {

@@ -11,14 +11,20 @@ import Cartography
 import SwiftVideoBackground
 
 protocol DefaultCities {
-    var citiesArray: [String] {get set}
+    var citiesArray: [City] {get set}
 }
 
 class WeatherCollectionViewController: UIViewController, DefaultCities {
     
 //    MARK: Properties
     
-    var citiesArray: [String] = ["Almaty", "Taiwan"]
+    lazy var backgrounImage: UIImageView = {
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "weatherWall"))
+        imageView.contentMode = .scaleToFill
+        return imageView
+    }()
+    
+    var citiesArray: [City] = []
     
     lazy var searchButton: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.search, target: self, action: #selector(searchOtherCities))
@@ -26,7 +32,7 @@ class WeatherCollectionViewController: UIViewController, DefaultCities {
     }()
     
     lazy var citiesButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.organize, target: self, action: nil)
+        let button = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.organize, target: self, action: #selector(getCitiesList))
         return button
     }()
     
@@ -43,18 +49,37 @@ class WeatherCollectionViewController: UIViewController, DefaultCities {
     }()
 
 //    MARK: Lifecycle
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        collectionView.reloadData()
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        fetchData()
         setupNavigationBar()
         setupViews()
         addConstraints()
         
     }
     
+    private func fetchData() {
+        do {
+            let result = try CoreDataConstants.context.fetch(City.fetchRequest())
+            citiesArray = result as! [City]
+        } catch let error {
+            print(error)
+        }
+    }
+    
     private func setupViews() {
         
         view.addSubViews([collectionView])
+        view.insertSubview(backgrounImage, at: 0)
         
     }
     
@@ -76,17 +101,29 @@ class WeatherCollectionViewController: UIViewController, DefaultCities {
     
     private func addConstraints() {
         
-        constrain(view, collectionView) { v1, v2 in
+        constrain(view, collectionView, backgrounImage) { v1, v2, v3 in
             v2.width == v1.width
             v2.height == v1.height
             v2.center == v1.center
+            
+            v3.width == v1.width
+            v3.height == v1.height
+            v3.center == v1.center
         }
         
         
     }
     
     @objc private func searchOtherCities() {
-        navigationController?.pushViewController(ViewController(), animated: true)
+        let controller = ViewController()
+        controller.defaultCities = self
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    @objc private func getCitiesList() {
+        let controller = ReservedCityController()
+        controller.defaultCities = self
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }
@@ -104,11 +141,18 @@ extension WeatherCollectionViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-//    MARK: Colllection View Layout
+//    MARK: Collection View Layout
 
 extension WeatherCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if citiesArray.count == 0 {
+            collectionView.alpha = 0
+        } else {
+            UIView.animate(withDuration: 0.5) {
+                self.collectionView.alpha = 1
+            }
+        }
         return citiesArray.count
     }
     
@@ -116,7 +160,7 @@ extension WeatherCollectionViewController: UICollectionViewDelegate, UICollectio
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.mainCellReuseIdentifier, for: indexPath) as! WeatherCollectionViewCell
         
 //        cell.defaultCityName = citiesArray[indexPath.row]
-        cell.getInformationWeather(defaultCityName: citiesArray[indexPath.row])
+        cell.getInformationWeather(defaultCityName: citiesArray[indexPath.row].cityName!)
         
         return cell
     }
